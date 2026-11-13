@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}投稿審查系統{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">稿</span> 投稿審查系統</a>
+  {% if session.get('user_id') %}
+  <nav>
+    <span class="user-pill">{{ session.get('display_name') }}・{{ '作者' if session.get('role') == 'author' else '編輯' }}</span>
+    <a class="nav-link" href="{{ url_for('logout') }}">登出</a>
+  </nav>
+  {% endif %}
+</header>
+<main class="container">
+  {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+  {% block content %}{% endblock %}
+</main>
+<footer>投稿審查系統・課程個人專題 © {{ current_year }}</footer>
+{% if sync_enabled %}
+<script>
+(() => {
+  let currentVersion = {{ sync_version|tojson }};
+  const checkForUpdates = async () => {
+    try {
+      const response = await fetch("/api/dashboard-version", {
+        cache: "no-store",
+        credentials: "same-origin"
+      });
+      if (!response.ok) return;
+      const data = await response.json();
+      if (currentVersion && data.version !== currentVersion) {
+        window.location.reload();
+        return;
+      }
+      currentVersion = data.version;
+    } catch (error) {
+      // Temporary network interruptions are ignored; the next poll will retry.
+    }
+  };
+  window.setInterval(checkForUpdates, 4000);
+})();
+</script>
+{% endif %}
+</body>
+</html>

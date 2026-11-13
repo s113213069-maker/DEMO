@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}錯誤 {{ code }}｜投稿審查系統{% endblock %}
+{% block content %}<div class="empty-state error-state"><h1>{{ code }}</h1><h3>{{ message }}</h3><a class="btn btn-primary" href="{{ url_for('index') }}">返回首頁</a></div>{% endblock %}

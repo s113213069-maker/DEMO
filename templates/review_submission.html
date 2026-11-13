@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}稿件審查｜投稿審查系統{% endblock %}
+{% block content %}
+<div class="back-row">
+  {% if submission.status == '已通過' %}
+  <a href="/editor/approved">← 返回已通過稿件清單</a>
+  {% else %}
+  <a href="{{ url_for('editor_dashboard') }}">← 返回待審查清單</a>
+  {% endif %}
+</div>
+<div class="review-layout">
+  <article class="panel article-panel">
+    <div class="article-meta"><span class="status status-pending">{{ submission.status }}</span><span>{{ submission.category }}</span><span>作者：{{ submission.author_name }}</span></div>
+    <h1>{{ submission.title }}</h1>
+    <div class="article-date">投稿時間：{{ submission.submitted_at or submission.created_at }}</div>
+    <div class="article-content">{{ submission.content }}</div>
+  </article>
+  <aside class="panel decision-panel">
+    <div class="eyebrow">REVIEW DECISION</div><h2>審查決定</h2>
+    {% if submission.status == '審查中' %}
+    <p class="muted">請閱讀稿件後選擇審查結果。</p>
+    <form method="post" action="{{ url_for('review_decision', submission_id=submission.id) }}" onsubmit="return confirm('確定核准此稿件？');">
+      <input type="hidden" name="decision" value="approve"><button class="btn btn-success full" type="submit">✓ 審查通過</button>
+    </form>
+    <form method="post" action="{{ url_for('review_decision', submission_id=submission.id) }}" onsubmit="return confirm('確定退回此稿件給作者修改？');">
+      <input type="hidden" name="decision" value="return"><button class="btn btn-outline full" type="submit">退回作者修改</button>
+    </form>
+    {% else %}<p>此稿件目前狀態為 <strong>{{ submission.status }}</strong>，無法再次審查。</p>{% endif %}
+    <div class="decision-hint">通過：狀態變更為「已通過」<br>退回：狀態變更為「編輯中」</div>
+  </aside>
+</div>
+{% if history %}
+<div class="panel" style="margin-top:20px">
+  <div class="panel-head"><h2>審查紀錄</h2><span class="count">{{ history|length }} 筆紀錄</span></div>
+  <div class="table-wrap"><table><thead><tr><th>審查者</th><th>處理結果</th><th>處理時間</th></tr></thead><tbody>
+  {% for log in history %}
+  <tr><td>{{ log.reviewer_name }}</td><td>{{ '審查通過' if log.decision == 'approve' else '退回作者修改' }}</td><td class="muted small">{{ log.decided_at }}</td></tr>
+  {% endfor %}
+  </tbody></table></div>
+</div>
+{% endif %}
+{% endblock %}

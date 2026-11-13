@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}登入｜投稿審查系統{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <section class="auth-card">
+    <div class="eyebrow">SUBMISSION MANAGEMENT</div>
+    <h1>歡迎使用投稿審查系統</h1>
+    <p class="muted">請登入以管理投稿或進行稿件審查。</p>
+    <form method="post" class="form-stack">
+      <label>帳號<input name="username" required autocomplete="username" placeholder="請輸入帳號"></label>
+      <label>密碼<input name="password" type="password" required autocomplete="current-password" placeholder="請輸入密碼"></label>
+      <button class="btn btn-primary full" type="submit">登入系統</button>
+    </form>
+    <p class="auth-bottom">還沒有作者帳號？ <a href="{{ url_for('register') }}">註冊作者帳號</a></p>
+    <div class="demo-box"><strong>展示用測試帳號</strong><br>作者：author / 1234<br>編輯：editor / 1234</div>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}編輯工作台｜投稿審查系統{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">EDITOR WORKSPACE</div><h1>稿件審查中心</h1><p class="muted">查看待審查稿件，閱讀內容並作出審查決定。</p></div></div>
+<div class="stats-grid">
+  <div class="stat-card"><span>待審查</span><strong>{{ counts.pending }}</strong><small>篇稿件</small></div>
+  <div class="stat-card"><span>已通過</span><strong>{{ counts.approved }}</strong><small>篇稿件</small></div>
+  <div class="stat-card"><span>編輯中</span><strong>{{ counts.draft }}</strong><small>篇稿件</small></div>
+</div>
+<div class="panel"><div class="panel-head"><h2>待審查清單</h2><a class="btn btn-small btn-outline" href="/editor/approved">查看已通過清單</a><span class="count">{{ submissions|length }} 件待處理</span></div>
+{% if submissions %}
+<div class="table-wrap"><table><thead><tr><th>作者</th><th>類別</th><th>標題</th><th>送出時間</th><th>操作</th></tr></thead><tbody>
+{% for item in submissions %}<tr><td>{{ item.author_name }}</td><td>{{ item.category }}</td><td class="title-cell">{{ item.title }}</td><td class="muted small">{{ item.submitted_at }}</td><td><a class="btn btn-small btn-primary" href="{{ url_for('review_submission', submission_id=item.id) }}">查看並審查</a></td></tr>{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty-state"><div class="empty-icon">✓</div><h3>目前沒有待審查稿件</h3><p class="muted">新投稿送出後會顯示在這裡。</p></div>{% endif %}
+</div>
+{% endblock %}

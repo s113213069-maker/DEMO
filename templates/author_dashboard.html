@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}作者工作台｜投稿審查系統{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><div class="eyebrow">AUTHOR WORKSPACE</div><h1>我的投稿稿件</h1><p class="muted">新增、編輯稿件，並追蹤目前的審查狀態。</p></div>
+  <a class="btn btn-primary" href="{{ url_for('new_submission') }}">＋ 新增投稿</a>
+</div>
+<div class="panel">
+  <div class="panel-head"><h2>稿件清單</h2><span class="count">{{ submissions|length }} 件稿件</span></div>
+  {% if submissions %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>類別</th><th>標題</th><th>審查狀態</th><th>最後更新</th><th>操作</th></tr></thead>
+    <tbody>{% for item in submissions %}
+    <tr>
+      <td>{{ item.category }}</td><td class="title-cell">{{ item.title }}</td>
+      <td><span class="status status-{{ 'draft' if item.status == '編輯中' else ('pending' if item.status == '審查中' else 'approved') }}">{{ item.status }}</span></td>
+      <td class="muted small">{{ item.updated_at }}</td>
+      <td><div class="actions">
+        {% if item.status == '編輯中' %}
+        <a class="text-action" href="{{ url_for('edit_submission', submission_id=item.id) }}">編輯</a>
+        <form method="post" action="{{ url_for('submit_submission', submission_id=item.id) }}" onsubmit="return confirm('確定送出這篇稿件進行審查？');"><button class="text-action" type="submit">送出</button></form>
+        <form method="post" action="{{ url_for('delete_submission', submission_id=item.id) }}" onsubmit="return confirm('確定刪除此稿件？此操作無法復原。');"><button class="text-action danger-text" type="submit">刪除</button></form>
+        {% else %}<span class="muted small">已送出，不可編輯</span>{% endif %}
+      </div></td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">＋</div><h3>目前還沒有投稿</h3><p class="muted">建立第一篇稿件，開始使用投稿審查流程。</p><a class="btn btn-primary" href="{{ url_for('new_submission') }}">新增第一篇稿件</a></div>
+  {% endif %}
+</div>
+<div class="note"><strong>狀態說明</strong><span><i class="dot draft-dot"></i> 編輯中：可修改、刪除或送出</span><span><i class="dot pending-dot"></i> 審查中：等待編輯審查</span><span><i class="dot approved-dot"></i> 已通過：審查完成</span></div>
+{% endblock %}

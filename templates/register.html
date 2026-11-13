@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}作者註冊｜投稿審查系統{% endblock %}
+{% block content %}
+<div class="auth-wrap"><section class="auth-card">
+  <div class="eyebrow">CREATE AUTHOR ACCOUNT</div><h1>註冊作者帳號</h1>
+  <p class="muted">註冊後即可新增及管理自己的投稿稿件。</p>
+  <form method="post" class="form-stack">
+    <label>顯示名稱<input name="display_name" required maxlength="50" placeholder="例如：王小明"></label>
+    <label>帳號<input name="username" required maxlength="40" placeholder="設定登入帳號"></label>
+    <label>密碼<input name="password" type="password" required minlength="4" placeholder="至少 4 個字元"></label>
+    <label>確認密碼<input name="confirm" type="password" required placeholder="再次輸入密碼"></label>
+    <button class="btn btn-primary full" type="submit">建立作者帳號</button>
+  </form>
+  <p class="auth-bottom"><a href="{{ url_for('login') }}">返回登入</a></p>
+</section></div>
+{% endblock %}

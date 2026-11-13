@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}已通過稿件｜投稿審查系統{% endblock %}
+{% block content %}
+<div class="back-row"><a href="/editor">← 返回審查中心</a></div>
+<div class="page-heading"><div><div class="eyebrow">APPROVED SUBMISSIONS</div><h1>已通過稿件清單</h1><p class="muted">所有審查完成並通過的投稿紀錄。</p></div></div>
+<div class="panel"><div class="panel-head"><h2>已通過清單</h2><span class="count">{{ submissions|length }} 篇</span></div>
+{% if submissions %}
+<div class="table-wrap"><table><thead><tr><th>作者</th><th>類別</th><th>標題</th><th>投稿時間</th><th>通過時間</th><th>審查者</th><th>內容</th></tr></thead><tbody>
+{% for item in submissions %}<tr><td>{{ item.author_name }}</td><td>{{ item.category }}</td><td class="title-cell">{{ item.title }}</td><td class="muted small">{{ item.submitted_at or '—' }}</td><td class="muted small">{{ item.reviewed_at or '—' }}</td><td>{{ item.reviewer_name or '—' }}</td><td><a class="btn btn-small btn-primary" href="{{ url_for('review_submission', submission_id=item.id) }}">查看內容</a></td></tr>{% endfor %}
+</tbody></table></div>
+{% else %}<div class="empty-state"><div class="empty-icon">✓</div><h3>目前還沒有通過的稿件</h3><p class="muted">審查通過的投稿會自動列在這裡。</p></div>{% endif %}
+</div>
+{% endblock %}

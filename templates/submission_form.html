@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ '編輯稿件' if submission else '新增投稿' }}｜投稿審查系統{% endblock %}
+{% block content %}
+<div class="back-row"><a href="{{ url_for('author_dashboard') }}">← 返回我的投稿</a></div>
+<div class="form-panel">
+  <div class="eyebrow">SUBMISSION EDITOR</div><h1>{{ '編輯稿件' if submission else '建立新投稿' }}</h1>
+  <p class="muted">目前狀態：<span class="status status-draft">編輯中</span></p>
+  <form method="post" class="form-stack">
+    <label>稿件類別<select name="category" required>
+      <option value="">請選擇類別</option>
+      {% for cat in ['資訊科技','教育研究','管理與商業','社會議題','其他'] %}
+      <option value="{{ cat }}" {% if submission and submission.category == cat %}selected{% endif %}>{{ cat }}</option>
+      {% endfor %}
+    </select></label>
+    <label>稿件標題<input name="title" required maxlength="150" value="{{ submission.title if submission else '' }}" placeholder="請輸入文章標題"></label>
+    <label>文章內容<textarea name="content" rows="12" required placeholder="請輸入完整文章內容...">{{ submission.content if submission else '' }}</textarea></label>
+    <div class="form-actions"><a class="btn btn-light" href="{{ url_for('author_dashboard') }}">取消</a><button class="btn btn-primary" type="submit">儲存稿件</button></div>
+  </form>
+</div>
+{% endblock %}
